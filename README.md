@@ -23,3 +23,11 @@ Install requriments
 pip install -r requirmnets.txt
 ```
 
+```bash
+git init && dvc init
+
+dvc add ata_given/winequality.csv
+
+git add . && git commit -m "first commit"
+```
+
