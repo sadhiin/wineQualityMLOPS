@@ -57,6 +57,25 @@ def train_and_eval(config_path):
     print("  MAE: %s" % mae)
     print("  R2: %s" % r2)
 
+    # reporting the informations
+    scores_file = config["reports"]["scores"]
+    params_file = config["reports"]["params"]
+    with open(scores_file, 'w') as f:
+        matric = {
+            "rmse": rmse,
+            "mae": mae,
+            "r2": r2
+        }
+        json.dump(matric, f, indent=4)
+
+    with open(params_file, 'w') as f:
+        param = {
+            "alpha": alpha,
+            "l1_ratio": l1_ratio
+        }
+        json.dump(param, f, indent=4)
+
+    # saving the model file
     os.makedirs(model_dir, exist_ok=True)
 
     # timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
@@ -65,6 +84,10 @@ def train_and_eval(config_path):
     model_path = os.path.join(model_dir, "model.joblib")
 
     joblib.dump(model, model_path)
+
+
+
+
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()

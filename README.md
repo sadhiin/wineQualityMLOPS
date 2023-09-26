@@ -70,6 +70,21 @@ git add .
 git commit -m "Initial commit"
 ```
 
+# Run trianing
+```bash
+python src/train_and_evaluate.py --config=params.yaml
+```
+
+# Result monitor
+### Show different metrics
+```bash
+dvc metrics show
+```
+### Check matrics differents
+```bash
+dvc metrics diff
+```
+
 ## Running the Project
 
 To run the wine quality prediction project, refer to the project's Python scripts and Jupyter notebooks provided in the repository. You can start by exploring the notebooks and running the code to build and evaluate the machine learning models.
