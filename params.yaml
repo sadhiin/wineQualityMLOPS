@@ -14,7 +14,7 @@ split_data:
   test_path: data/processed/test_winequality.csv
   test_size: 0.2
 
-estimator:
+estimators:
   ElasticNet:
     params:
       alpha: 0.88
