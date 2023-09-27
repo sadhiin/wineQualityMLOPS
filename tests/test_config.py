@@ -14,3 +14,9 @@ def test_withexception():
     with pytest.raises(NotInRangeError):
         if a in range(10, 20):
             raise NotInRangeError("Value is not in range")
+
+
+def test_something():
+    a = 2
+    b = 2
+    assert True
