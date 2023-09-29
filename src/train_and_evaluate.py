@@ -25,7 +25,7 @@ def eval_metrics(actual, predicted):
 
     return rmse, mae, r2
 
-def train_and_eval(config_path):
+def train_and_eval_Elasticnet(config_path):
     config = read_params(config_path)
 
     train_data_path = config["split_data"]["train_path"]
@@ -94,5 +94,5 @@ if __name__ == "__main__":
     args.add_argument("--config", default="params.yaml")
 
     parsed_args = args.parse_args()
-    train_and_eval(config_path= parsed_args.config)
+    train_and_eval_Elasticnet(config_path= parsed_args.config)
 
