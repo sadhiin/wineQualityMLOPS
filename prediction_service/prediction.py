@@ -35,7 +35,7 @@ def prediction(data):
         if 3 <= pred <= 8:
             return pred
         else:
-            raise NotInRange()
+            raise NotInRange
     except NotInRange:
         return "Unexpected result"
 
@@ -65,12 +65,17 @@ def validate_input(dict_request):
 
 
 def form_response(dict_request):
+    print(dict_request)
     if validate_input(dict_request):
         data = dict_request.values()
         data = [list(map(float, data))]
         response = prediction(data)
+        print(response)
         return response
-    
+    else:
+        response = "Something went wrong!"
+        return response
+
 def api_response(dict_request):
     try:
         if validate_input(dict_request):
@@ -81,16 +86,3 @@ def api_response(dict_request):
     except Exception as e:
         response = {"the_expected_range": get_schema(), "response": str(e)}
         return response
-
-
-def api_response(api_input):
-    try:
-        data = np.array([list(map(float, api_input.json.values()))])
-        print(data)
-        response = prediction(data)
-        response = {"response": response}
-        return response
-    except Exception as e:
-        print(e)
-        error = {"error": "Something went wrong! Please try again."}
-        return error
