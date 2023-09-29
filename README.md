@@ -75,14 +75,26 @@ git commit -m "Initial commit"
 python src/train_and_evaluate.py --config=params.yaml
 ```
 
-tox command -
+## Result monitor
+### Show different metrics
+```bash
+dvc metrics show
+```
+### Check matrics differents
+```bash
+dvc metrics diff
+```
+# Tox
+Tox command
 ```bash
 tox
 ```
-for rebuilding -
+for rebuilding
 ```bash
 tox -r
 ```
+
+# Testing and Setup
 pytest command
 ```bash
 pytest -v
@@ -93,26 +105,11 @@ setup commands -
 pip install -e .
 ```
 
-build your own package commands-
+Build your own package commands-
 ```bash
 python setup.py sdist bdist_wheel
 ```
 
-# Result monitor
-### Show different metrics
-```bash
-dvc metrics show
-```
-### Check matrics differents
-```bash
-dvc metrics diff
-```
-
-
-
-## Running the Project
-
-To run the wine quality prediction project, refer to the project's Python scripts and Jupyter notebooks provided in the repository. You can start by exploring the notebooks and running the code to build and evaluate the machine learning models.
 
 ## License
 
