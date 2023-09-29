@@ -53,6 +53,7 @@ git init
 dvc init
 ```
 
+# DVC + Testing(automated)
 ### Adding Data
 
 The dataset used for this project is stored in the `data_given` directory. To add the dataset using DVC, run the following command:
@@ -70,7 +71,7 @@ git add .
 git commit -m "Initial commit"
 ```
 
-# Run trianing
+## Run trianing
 ```bash
 python src/train_and_evaluate.py --config=params.yaml
 ```
@@ -84,7 +85,7 @@ dvc metrics show
 ```bash
 dvc metrics diff
 ```
-# Tox
+## Tox
 Tox command
 ```bash
 tox
@@ -94,7 +95,7 @@ for rebuilding
 tox -r
 ```
 
-# Testing and Setup
+## Testing and Setup
 pytest command
 ```bash
 pytest -v
@@ -109,6 +110,8 @@ Build your own package commands-
 ```bash
 python setup.py sdist bdist_wheel
 ```
+
+# MLFlow + DVC
 
 
 ## License
