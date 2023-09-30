@@ -73,3 +73,9 @@ def test_form_rsponse_unexpected_range(data = input_data['incorrect_range']):
 def test_api_rsponse_unexpected_range(data=input_data['incorrect_range']):
     res = api_response(data)
     assert res['response'] == prediction_service.prediction.NotInRange().message
+
+
+def test_api_response_incorrect_column(data = input_data['incorrect_col']):
+    res = api_response(data)
+    assert res['response'] == prediction_service.prediction.NotInCol().message
+
