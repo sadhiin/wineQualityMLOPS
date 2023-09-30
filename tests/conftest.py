@@ -11,7 +11,7 @@ def config(config_path = "params.yaml"):
 
 
 @pytest.fixture
-def schema_input(schemapath = schema_path):
-    with open(schemapath) as f:
+def schema_input(schema_path = 'input_schema.json'):
+    with open(schema_path) as f:
         schema = json.load(f)
     return schema

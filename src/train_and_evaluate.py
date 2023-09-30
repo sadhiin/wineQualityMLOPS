@@ -18,12 +18,14 @@ import argparse
 import joblib
 import json
 
+
 def eval_metrics(actual, predicted):
     rmse = np.sqrt(mean_squared_error(actual, predicted))
     mae = median_absolute_error(actual, predicted)
     r2 = r2_score(actual, predicted)
 
     return rmse, mae, r2
+
 
 def train_and_eval_Elasticnet(config_path):
     config = read_params(config_path)
@@ -45,8 +47,12 @@ def train_and_eval_Elasticnet(config_path):
     train_y = train[target]
     test_y = test[target]
 
-    model = ElasticNet(alpha= alpha, l1_ratio= l1_ratio, random_state= random_state)
-    model.fit(train_x, train_y)
+    model = ElasticNet(alpha=alpha,
+                       l1_ratio=l1_ratio,
+                       random_state=random_state,
+                       warn_only=True)
+
+    model.fit(X=train_x, y=train_y)
 
     predicted_qualities = model.predict(test_x)
 
@@ -85,6 +91,7 @@ def train_and_eval_Elasticnet(config_path):
 
     joblib.dump(model, model_path)
 
+
 def train_and_eval_ElasticnetCV(config_path):
     config = read_params(config_path)
 
@@ -106,7 +113,7 @@ def train_and_eval_ElasticnetCV(config_path):
     train_y = train[target]
     test_y = test[target]
 
-    model = ElasticNetCV(l1_ratio= l1_ratio, cv=cv,random_state= random_state)
+    model = ElasticNetCV(l1_ratio=l1_ratio, cv=cv, random_state=random_state)
     model.fit(train_x, train_y)
 
     predicted_qualities = model.predict(test_x)
@@ -132,7 +139,7 @@ def train_and_eval_ElasticnetCV(config_path):
     with open(params_file, 'w') as f:
         param = {
             "l1_ratio": l1_ratio,
-            "cv" : cv
+            "cv": cv
         }
         json.dump(param, f, indent=4)
 
@@ -147,14 +154,11 @@ def train_and_eval_ElasticnetCV(config_path):
     joblib.dump(model, model_path)
 
 
-
-
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.add_argument("--config", default="params.yaml")
 
     parsed_args = args.parse_args()
 
-    train_and_eval_Elasticnet(config_path= parsed_args.config)
+    train_and_eval_Elasticnet(config_path=parsed_args.config)
     # train_and_eval_ElasticnetCV(config_path= parsed_args.config)
-
