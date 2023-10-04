@@ -17,6 +17,8 @@ from get_data import read_params
 import argparse
 import joblib
 import json
+import mlflow
+from urllib.parse import urlparse
 
 
 def eval_metrics(actual, predicted):
@@ -47,49 +49,47 @@ def train_and_eval_Elasticnet(config_path):
     train_y = train[target]
     test_y = test[target]
 
-    model = ElasticNet(alpha=alpha,
-                       l1_ratio=l1_ratio,
-                       random_state=random_state,
-                       warn_only=True)
+################################################### MlFlow ##########################
+    mlflow_config = config["mlflow_config"]
+    remote_server_uri = config["mlflow_config"]["remote_server_uri"]
+    mlflow.set_tracking_uri(remote_server_uri)
 
-    model.fit(X=train_x, y=train_y)
+    mlflow.set_experiment(mlflow_config["experiment_name"])
 
-    predicted_qualities = model.predict(test_x)
+    with mlflow.start_run(run_name=mlflow_config["run_name"]) as mlops_run:
 
-    (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
+        model = ElasticNet(alpha=alpha,
+                           l1_ratio=l1_ratio,
+                           random_state=random_state)
 
-    print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
-    print("  RMSE: %s" % rmse)
-    print("  MAE: %s" % mae)
-    print("  R2: %s" % r2)
+        model.fit(X=train_x, y=train_y)
 
-    # reporting the informations
-    scores_file = config["reports"]["scores"]
-    params_file = config["reports"]["params"]
-    with open(scores_file, 'w') as f:
-        matric = {
-            "rmse": rmse,
-            "mae": mae,
-            "r2": r2
-        }
-        json.dump(matric, f, indent=4)
+        predicted_qualities = model.predict(test_x)
 
-    with open(params_file, 'w') as f:
-        param = {
-            "alpha": alpha,
-            "l1_ratio": l1_ratio
-        }
-        json.dump(param, f, indent=4)
+        (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
-    # saving the model file
-    os.makedirs(model_dir, exist_ok=True)
+        mlflow.log_param('alpha', alpha)
+        mlflow.log_param('l1_ratio', l1_ratio)
+        mlflow.log_metric("rmse", rmse)
+        mlflow.log_metric("mae", mae)
+        mlflow.log_metric("r2", r2)
 
-    # timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    # model_filename = f"model_{timestamp}.joblib"
-    # model_path = os.path.join(model_dir, model_filename)
-    model_path = os.path.join(model_dir, "model.joblib")
+        tracking_url_type_store = urlparse(mlflow.get_artifact_uri()).scheme
 
-    joblib.dump(model, model_path)
+        if tracking_url_type_store != "file":
+            mlflow.sklearn.log_model(
+                model,
+                "model",
+                registered_model_name=mlflow_config["registered_model_name"])
+        else:
+            # Ensure the model is saved using joblib
+            # model_filename = "model.pkl"
+            # joblib.dump(model, model_filename)
+
+            # # Log the saved model file as an artifact
+            # mlflow.log_artifact(model_filename, artifact_path="models")
+            mlflow.sklearn.log_model(model, "model")
+
 
 
 def train_and_eval_ElasticnetCV(config_path):
